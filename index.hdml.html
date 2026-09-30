@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arvind Kumar S | Portfolio</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --panel-bg: rgba(15, 23, 42, 0.75);
+            --accent-cyan: #00f0ff;
+            --accent-magenta: #ff007f;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(0, 240, 255, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Three.js Canvas Background */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* HUD Header / Nav */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent-cyan);
+            text-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 120px 20px 60px 20px;
+        }
+
+        /* Sections / Panels */
+        section {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 40px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            position: relative;
+            overflow: hidden;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-cyan), var(--accent-magenta));
+        }
+
+        h1, h2, h3 {
+            font-family: 'Rajdhani', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 40px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+        }
+
+        .hero h1 span {
+            color: var(--accent-cyan);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--bg-color);
+            background: var(--accent-cyan);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--accent-magenta);
+            color: var(--text-main);
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.7);
+        }
+
+        /* Content Headings */
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title i {
+            color: var(--accent-magenta);
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: rgba(11, 15, 25, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            border-radius: 6px;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-3px);
+        }
+
+        .card h3 {
+            color: var(--text-main);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .card p, .card ul {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .card ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .card ul li::before {
+            content: "▹ ";
+            color: var(--accent-cyan);
+        }
+
+        /* Contact Details */
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .contact-item i {
+            color: var(--accent-cyan);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            background: rgba(11, 15, 25, 0.9);
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; }
+            nav ul { display: none; }
+            .hero h1 { font-size: 2.5rem; }
+            .container { padding-top: 100px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Three.js Canvas Container -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation Header -->
+    <header>
+        <div class="logo">AK.VFX // 3D</div>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Expertise</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Container -->
+    <div class="container">
+
+        <!-- Hero Section -->
+        <section class="hero" id="about">
+            <h1>Arvind <span>Kumar S</span></h1>
+            <p>Final-year B.Voc Digital Media & Animation student[cite: 1], professional freelance video editor[cite: 1], and 3D generalist bridging technical precision with creative visual storytelling.</p>
+            <a href="#contact" class="btn">Initiate Contact</a>
+        </section>
+
+        <!-- Technical Expertise -->
+        <section id="skills">
+            <h2 class="section-title"><i class="fa-solid microchip"></i> Technical Arsenal</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>3D Animation & Modeling</h3>
+                    <p><strong>Blender:</strong> Mesh Modeling, Texturing, Keyframing, Lighting & Rendering[cite: 1].</p>
+                </div>
+                <div class="card">
+                    <h3>Motion Graphics & VFX</h3>
+                    <p><strong>Adobe After Effects:</strong> Compositing, Motion Tracking, Visual Effects, Kinetic Typography[cite: 1].</p>
+                </div>
+                <div class="card">
+                    <h3>Video Editing & Grading</h3>
+                    <p><strong>Premiere Pro & DaVinci Resolve:</strong> Multi-cam Editing, Color Grading, Audio Syncing, Post-Production Pipeline[cite: 1].</p>
+                </div>
+                <div class="card">
+                    <h3>Creative Direction</h3>
+                    <p>Storyboarding, Shot Composition, Pacing, Visual Narration, Directing[cite: 1].</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Professional Experience -->
+        <section id="experience">
+            <h2 class="section-title"><i class="fa-solid fa-briefcase"></i> Professional Experience</h2>
+            <div class="card">
+                <h3>Freelance Video Editor & Director[cite: 1]</h3>
+                <p style="color: var(--accent-cyan); margin-bottom: 10px; font-family: 'Rajdhani'; font-weight: 600;">Independent / Freelance | Bengaluru, KA[cite: 1]</p>
+                <ul>
+                    <li>Executed end-to-end post-production workflows for various digital media and video projects using Adobe Premiere Pro and DaVinci Resolve, ensuring seamless delivery[cite: 1].</li>
+                    <li>Provided creative direction and concept execution from storyboarding to final cut, refining pacing, visual continuity, and color grading[cite: 1].</li>
+                    <li>Collaborated directly with clients to understand narrative objectives and translate artistic vision into compelling visual content[cite: 1].</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Education & Interests -->
+        <section id="education">
+            <h2 class="section-title"><i class="fa-solid fa-graduation-cap"></i> Education & Background</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Education</h3>
+                    <p><strong>Bachelor of Vocation (B.Voc) in Digital Media and Animation (Final Year)</strong><br>St. Joseph’s University, Bengaluru[cite: 1]</p>
+                    <p style="margin-top: 10px;"><strong>Pre-University (PU):</strong> St. Joseph’s PU Evening College, Bengaluru[cite: 1]</p>
+                    <p style="margin-top: 10px;"><strong>High School:</strong> Atfaa High School[cite: 1]</p>
+                </div>
+                <div class="card">
+                    <h3>Performing & Visual Arts</h3>
+                    <p>Active background in singing, dancing, acting, and fine drawing / art[cite: 1], fueling a deep sense of aesthetic timing and visual execution.</p>
+                    <p style="margin-top: 10px;"><strong>Languages:</strong> English, Kannada[cite: 1]</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <h2 class="section-title"><i class="fa-solid fa-envelope"></i> Transmission Channels</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Ready to collaborate on high-impact filmmaking, 3D animation, or motion graphics projects.</p>
+            <div class="contact-info">
+                <div class="contact-item"><i class="fa-solid fa-phone"></i> +91 6360276880[cite: 1]</div>
+                <div class="contact-item"><i class="fa-solid fa-envelope"></i> arvindmusic1702@gmail.com[cite: 1]</div>
+                <div class="contact-item"><i class="fa-solid fa-location-dot"></i> Bengaluru, Karnataka[cite: 1]</div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Arvind Kumar S. All rights reserved. Built with Game-Engine UI & Three.js 3D Wireframes.</p>
+    </footer>
+
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        // --- THREE.JS BACKGROUND SCENE ---
+        const canvas = document.getElementById('bg-canvas');
+        const scene = new THREE.Scene();
+
+        // Camera setup
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 15;
+
+        // Renderer setup
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Lighting (Unreal/Unity Neon Theme: Cyan & Magenta)
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        const pointLight1 = new THREE.PointLight(0x00f0ff, 2, 50);
+        pointLight1.position.set(10, 10, 10);
+        scene.add(pointLight1);
+
+        const pointLight2 = new THREE.PointLight(0xff007f, 2, 50);
+        pointLight2.position.set(-10, -10, 10);
+        scene.add(pointLight2);
+
+        // Create Wireframe Objects (Camera, Clapboard, Pen representations)
+        const wireframeMaterial = new THREE.MeshBasicMaterial({
+            color: 0x00f0ff,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.35
+        });
+
+        const secondaryMaterial = new THREE.MeshBasicMaterial({
+            color: 0xff007f,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.3
+        });
+
+        const objectsGroup = new THREE.Group();
+
+        // 1. Camera Body (Box representation)
+        const cameraGeo = new THREE.BoxGeometry(3, 2, 2);
+        const cameraMesh = new THREE.Mesh(cameraGeo, wireframeMaterial);
+        cameraMesh.position.set(-5, 3, -2);
+        objectsGroup.add(cameraMesh);
+
+        // 2. Clapboard (Flat Box representation)
+        const clapGeo = new THREE.BoxGeometry(2.5, 2, 0.2);
+        const clapMesh = new THREE.Mesh(clapGeo, secondaryMaterial);
+        clapMesh.position.set(6, -2, -3);
+        objectsGroup.add(clapMesh);
+
+        // 3. Pen/Stylus (Cylinder representation)
+        const penGeo = new THREE.CylinderGeometry(0.2, 0.2, 4, 8);
+        const penMesh = new THREE.Mesh(penGeo, wireframeMaterial);
+        penMesh.position.set(5, 4, -4);
+        penMesh.rotation.z = Math.PI / 4;
+        objectsGroup.add(penMesh);
+
+        // 4. Background Grid Floor (Gaming/Engine grid aesthetic)
+        const gridHelper = new THREE.GridHelper(50, 50, 0x00f0ff, 0x1e293b);
+        gridHelper.position.y = -6;
+        scene.add(gridHelper);
+
+        scene.add(objectsGroup);
+
+        // Mouse tracking for interactivity
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        window.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+            mouseY = (event.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+        });
+
+        // Window resize handling
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Animation Loop
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const elapsedTime = clock.getElapsedTime();
+
+            // Smooth interpolation (lerp) for mouse sensitivity
+            targetX += (mouseX - targetX) * 0.05;
+            targetY += (mouseY - targetY) * 0.05;
+
+            // Rotate entire object group based on mouse movement
+            objectsGroup.rotation.y = targetX * 0.8;
+            objectsGroup.rotation.x = -targetY * 0.8;
+
+            // Gentle autonomous float and spin
+            cameraMesh.rotation.x += 0.005;
+            cameraMesh.rotation.y += 0.008;
+
+            clapMesh.rotation.z = Math.sin(elapsedTime * 1.5) * 0.2;
+            penMesh.rotation.y += 0.01;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
